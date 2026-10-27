@@ -1,0 +1,22 @@
+# Anamnesis — LAN-first. Do NOT publish this port to the internet.
+services:
+  anamnesis:
+    build: .
+    # image: ghcr.io/<org>/anamnesis:latest
+    container_name: anamnesis
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      # Bind to your LAN IP (e.g. "192.168.1.10:8080:8080") or put a reverse proxy in front.
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./data:/data        # database, files, backups — back this up!
+      - ./config:/config    # plugins (M3)
+      # - /mnt/nas/medical-import:/import:ro   # Folder source (M3)
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
